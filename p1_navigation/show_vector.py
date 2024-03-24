@@ -9,9 +9,8 @@ from collections import deque
 import matplotlib.pyplot as plt
 from dqn_agent import Agent
 
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-device = "cpu"
-checkpoint = 'checkpoint_s17.pth'
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+checkpoint = 'p1_navigation/checkpoint_s17.pth'
 n_episodes = 5
 max_t = 1000
 
@@ -19,7 +18,7 @@ if __name__ == "__main__":
     # load the weights from file
     agent = Agent(vector=True, action_size=4, seed=0, device=device)
     agent.qnetwork_local.load_state_dict(torch.load(checkpoint))
-    env = UnityEnvironment(file_name="Banana_Linux/Banana.x86_64")
+    env = UnityEnvironment(file_name="p1_navigation/Banana_Linux/Banana.x86_64")
 
     # get the default brain
     brain_name = env.brain_names[0]

@@ -7,8 +7,7 @@ from dqn_agent import Agent
 import time
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-# device = "cpu"
-
+print(device)
 
 def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.995):
     """Deep Q-Learning.
@@ -27,22 +26,18 @@ def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
     for i_episode in range(1, n_episodes + 1):
         env_info = env.reset(train_mode=True)[brain_name]  # reset the environment
         state = env_info.visual_observations[0]  # get the current state
-        state = torch.from_numpy(state).float().permute(0, 3, 1, 2).to(device)
+        state = torch.from_numpy(state).float().permute(0, 3, 1, 2)
         score = 0
         for t in range(max_t):
-            # start_time = time.time()
-            action = agent.act(state, eps)
+            action = agent.act(state.to(device), eps)
             env_info = env.step(action)[brain_name]
             next_state = env_info.visual_observations[0]  # get the next state
-            next_state = torch.from_numpy(next_state).float().permute(0, 3, 1, 2).to(device)
+            next_state = torch.from_numpy(next_state).float().permute(0, 3, 1, 2)
             reward = env_info.rewards[0]  # get the reward
             done = env_info.local_done[0]  # see if episode has finished
-            # env_time = time.time() - start_time
             agent.step(state, action, reward, next_state, done)
             state = next_state
             score += reward
-            # agent_time = time.time() - start_time - env_time
-            # print(f"Time {t} Total Time: {time.time() - start_time:10.5f} StartTime: {start_time:15.5f} Agent Time: {agent_time:10.5f} Env Time: {env_time:10.5f}")
             if done:
                 break
         scores_window.append(score)  # save most recent score
@@ -61,7 +56,7 @@ def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
 
 if __name__ == "__main__":
     agent = Agent(vector=False, action_size=4, seed=0, device=device)
-    env = UnityEnvironment(file_name="VisualBanana_Linux/Banana.x86_64")
+    env = UnityEnvironment(file_name="p1_navigation/VisualBanana_Linux/Banana.x86_64")
     # get the default brain
     brain_name = env.brain_names[0]
     brain = env.brains[brain_name]
@@ -77,10 +72,9 @@ if __name__ == "__main__":
     print('Number of actions:', action_size)
 
     # examine the state space
-    state = env_info.vector_observations[0]
+    state = env_info.visual_observations[0]
     print('States look like:', state)
-    state_size = len(state)
-    print('States have length:', state_size)
+    print('States have shape:', state.shape)
 
     # run the training loop
     scores = dqn()

@@ -47,17 +47,17 @@ def dqn(n_episodes=2000, max_t=2000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
         print('\rEpisode {}\tAverage Score: {:.2f}'.format(i_episode, np.mean(scores_window)), end="")
         if i_episode % 100 == 0:
             print('\rEpisode {}\tAverage Score: {:.2f}'.format(i_episode, np.mean(scores_window)))
-        if np.mean(scores_window) >= 16.0:
+        if np.mean(scores_window) >= 17.0:
             print('\nEnvironment solved in {:d} episodes!\tAverage Score: {:.2f}'.format(i_episode - 100,
                                                                                          np.mean(scores_window)))
-            torch.save(agent.qnetwork_local.state_dict(), 'checkpoint_s16.pth')
+            torch.save(agent.qnetwork_local.state_dict(), 'checkpoint_s17.pth')
             break
     return scores
 
 
 if __name__ == "__main__":
     agent = Agent(vector=True, action_size=4, seed=0, device=device)
-    env = UnityEnvironment(file_name="Banana_Linux/Banana.x86_64")
+    env = UnityEnvironment(file_name="p1_navigation/Banana_Linux/Banana.x86_64")
     # get the default brain
     brain_name = env.brain_names[0]
     brain = env.brains[brain_name]

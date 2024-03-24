@@ -63,17 +63,14 @@ class PixelQNetwork(nn.Module):
 
     def forward(self, state):
         """Build a network that maps state -> action values."""
-        print(x.shape)
         x = F.relu(self.conv1(state))
         x = self.pool1(x)
         x = F.relu(self.conv2(x))
         x = self.pool2(x)
         x = F.relu(self.conv3(x))
         x = self.pool3(x)
-        x = x.view(x.size(0), -1)
-        print(x.shape)
+        x = x.reshape(x.size(0), -1)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
-        print(x.shape)
         return self.fc4(x)
